@@ -1,8 +1,8 @@
 // 기본 속성들
 let scene, camera, renderer, textMesh, parentContainer, texts, textObjsContainer;
-
-var raycaster = new THREE.Raycaster();
-var mouse = new THREE.Vector2(), INTERSECTED;
+// 레이저로 화면을 돌리듯이 면적을 만났을 때 거리와 면적을 계산하는 장치 mousepoint와 같이 사용됨.
+let raycaster = new THREE.Raycaster();
+let mousepoint = new THREE.Vector2(), INTERSECTED; // 마우스와의 교차점을 나타내는 옵션 INTERSECTED
 
 function setupScene() {
     scene = new THREE.Scene();
@@ -82,12 +82,12 @@ function onMouseMove(event) {
 function mouseEvent(event, action) {
     event.preventDefault();
 
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+    mousepoint.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mousepoint.y = - (event.clientY / window.innerHeight) * 2 + 1;
 
-    raycaster.setFromCamera(mouse, camera);
+    raycaster.setFromCamera(mousepoint, camera);
 
-    raycaster.setFromCamera(mouse, camera);
+    raycaster.setFromCamera(mousepoint, camera);
 
     for (let i = 0; i < parentContainer.children.length; i++) {
         let children = parentContainer.children[i].children;
