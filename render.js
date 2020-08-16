@@ -143,10 +143,10 @@ function setupTextGeometry() {
 
             var textOptions = { size: 40, height: 15, curveSegments: 5, font: font };
             var textobjs = [
-                createText("김영민", textOptions),
-                createText("검은사막", textOptions),
-                createText("하고있을까", textOptions),
-                createText("언제쯤?", textOptions)
+                createText("yeongmin", textOptions),
+                createText("blackdesert", textOptions),
+                createText("what are you doing?", textOptions),
+                createText("kim yeongmin", textOptions)
             ];
 
             var offsetDistance = 800;
