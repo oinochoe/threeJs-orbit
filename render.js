@@ -1,3 +1,4 @@
+// 기본 속성들
 let scene, camera, renderer, textMesh, parentContainer, texts, textObjsContainer;
 
 var raycaster = new THREE.Raycaster();
@@ -142,10 +143,10 @@ function setupTextGeometry() {
 
             var textOptions = { size: 40, height: 15, curveSegments: 5, font: font };
             var textobjs = [
-                createText("ExampleLink1", textOptions),
-                createText("ExampleLink2", textOptions),
-                createText("ExampleLink3", textOptions),
-                createText("ExampleLink4", textOptions)
+                createText("김영민", textOptions),
+                createText("검은사막", textOptions),
+                createText("하고있을까", textOptions),
+                createText("언제쯤?", textOptions)
             ];
 
             var offsetDistance = 800;
