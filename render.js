@@ -1,19 +1,32 @@
 // 기본 속성들
-let scene, camera, renderer, textMesh, parentContainer, texts, textObjsContainer;
-// 레이저로 화면을 돌리듯이 면적을 만났을 때 거리와 면적을 계산하는 장치 mousepoint와 같이 사용됨.
+let scene;
+let camera;
+let renderer;
+let textMesh;
+let parentContainer;
+let texts;
+let textObjsContainer;
+// 레이저로 화면을 돌리듯이 면적을 만났을 때 거리와 면적을 계산하는 장치 mousepoint와 같이 사용됨. *README참고*
 let raycaster = new THREE.Raycaster();
-let mousepoint = new THREE.Vector2(), INTERSECTED; // 마우스와의 교차점을 나타내는 옵션 INTERSECTED
+// 마우스와의 교차점을 나타내는 옵션 INTERSECTED
+let mousepoint = new THREE.Vector2(), INTERSECTED;
 
-function setupScene() {
+// Scene 설정
+const setupScene = () => {
+    // 기본 Scene 설정
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 3000);
-    camera.position.set(0, 0, 1200);
-
+    // 기본 camera 설정 (PerspectiveCamera를 통해서 원근감 표현) , 1, 카메라 중심점 수치 *README참고*
+    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 5000);
+    // 카메라 포지션 설정
+    camera.position.set(0, 0, 1500);
+    // 안티앨리어싱 설정으로 WebGL rendering
     renderer = new THREE.WebGLRenderer({ antialias: true });
+    // WebGL size 설정
     renderer.setSize(window.innerWidth, window.innerHeight);
+    // 디바이스에 따라 반응하도록 설정
     renderer.setPixelRatio(devicePixelRatio);
+    // WebGL 호출!
     document.body.appendChild(renderer.domElement);
-
 }
 
 function fti(feet) {
@@ -226,5 +239,5 @@ setupCubeBox();
 setupControls();
 add3DText();
 setTimeout(function(){
-render();
+    render();
 }, 10)
