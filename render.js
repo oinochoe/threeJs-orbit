@@ -12,12 +12,14 @@ let raycaster = new THREE.Raycaster();
 let mousepoint = new THREE.Vector2(), INTERSECTED;
 
 const OPTIONS = {
-    cameraPosition : 3000,
+    cameraPosition : 2000,
     cubeImage : ['./img/image_1.jpg', './img/image_2.jpg', './img/image_3.jpg', './img/image_4.jpg', './img/image_5.jpg', './img/image_6.jpg',],
     textArray : ['검은사막', '섀도우아레나', '검은사막모바일', 'CrimsonDesert'],
     textArrayUrl : ['https://www.kr.playblackdesert.com', 'https://shadowarena.pearlabyss.com', 'https://www.blackdesertm.com', 'https://crimsondesert.pearlabyss.com'],
     textOffset : 900,
-    textColor : 0xffffff
+    textColor : 0xffffff,
+    textSize: 100,
+    cameraMaxDistance : 3000,
 } || {};
 
 // Scene 설정
@@ -72,7 +74,7 @@ const setupControls = () => {
     controls.screenSpacePanning = false; // 패닝시에 카메라가 어떻게 보일지 결정
 
     controls.minDistance = 0;
-    controls.maxDistance = 5000; // max distance 결정
+    controls.maxDistance = OPTIONS.cameraMaxDistance; // max distance 결정
     controls.enablePan = false;
     controls.autoRotateSpeed = .5; // 자동으로 카메라가 도는 스피드 결정
 
@@ -174,7 +176,7 @@ const setupTextGeometry = () => {
         // https://gero3.github.io/facetype.js/
         fontLoader.load('./nanum.json', function (font) {
             // textOptions
-            let textOptions = { size: 150, height: 135, curveSegments: 1, font: font };
+            let textOptions = { size: OPTIONS.textSize, height: 135, curveSegments: 1, font: font };
             let textobjs = [
                 createText(OPTIONS.textArray[0], textOptions),
                 createText(OPTIONS.textArray[1], textOptions),
@@ -261,5 +263,6 @@ add3DText();
 
 
 // then으로 promise 받아온 상태에서 render하기= 너무 느려..
-
-render();
+setTimeout(() => {
+    render();
+}, 1000);
