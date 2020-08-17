@@ -19,7 +19,7 @@ const OPTIONS = {
     textOffset : 900,
     textColor : 0xffffff,
     textSize: 100,
-    cameraMaxDistance : 3000,
+    cameraMaxDistance : 2500,
 } || {};
 
 // Scene 설정
