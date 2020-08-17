@@ -16,7 +16,7 @@ const OPTIONS = {
     cubeImage : ['./img/image_1.jpg', './img/image_2.jpg', './img/image_3.jpg', './img/image_4.jpg', './img/image_5.jpg', './img/image_6.jpg',],
     textArray : ['검은사막', '섀도우아레나', '검은사막모바일', 'CrimsonDesert'],
     textArrayUrl : ['https://www.kr.playblackdesert.com', 'https://shadowarena.pearlabyss.com', 'https://www.blackdesertm.com', 'https://crimsondesert.pearlabyss.com'],
-    textOffset : 1400,
+    textOffset : 900,
     textColor : 0xffffff
 } || {};
 
@@ -161,8 +161,6 @@ const add3DText = () => {
         .then(data => {
             textObjsContainer = data;
             animate();
-            // then으로 promise 받아온 상태에서 render하기
-            render();
         })
         .catch(error => console.log(error));
 }
@@ -261,3 +259,7 @@ setupCubeBox();
 setupControls();
 add3DText();
 
+
+// then으로 promise 받아온 상태에서 render하기= 너무 느려..
+
+render();
