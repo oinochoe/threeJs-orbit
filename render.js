@@ -260,10 +260,3 @@ setupScene();
 setupCubeBox();
 setupControls();
 add3DText();
-
-
-// then으로 promise 받아온 상태에서 render하기= 너무 느려..
-setTimeout(() => {
-    render();
-    document.querySelector('canvas').classList.add('on');
-}, 1000);
