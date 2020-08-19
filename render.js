@@ -265,7 +265,7 @@ const render = () => {
         var mat = textObjsContainer[i];
         mat.children[0].material.opacity = 0.5;
         mat.children[0].material.wireframe = true;
-        mat.children[0].lookAt(camera.position);
+        mat.children[0].lookAt(camera.position); // 카메라 방향으로 보게 함.
     }
 
     renderer.render(scene, camera);
