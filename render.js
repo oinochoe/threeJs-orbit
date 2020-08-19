@@ -9,18 +9,30 @@ let textObjsContainer;
 // 레이저로 화면을 돌리듯이 면적을 만났을 때 거리와 면적을 계산하는 장치 mousepoint와 같이 사용됨. *README참고*
 let raycaster = new THREE.Raycaster();
 // 마우스와의 교차점을 나타내는 옵션 INTERSECTED
-let mousepoint = new THREE.Vector2(), INTERSECTED;
+let mousepoint = new THREE.Vector2(),
+    INTERSECTED;
 
-const OPTIONS = {
-    cameraPosition : 2000,
-    cubeImage : ['./img/image_1.jpg', './img/image_2.jpg', './img/image_3.jpg', './img/image_4.jpg', './img/image_5.jpg', './img/image_6.jpg',],
-    textArray : ['검은사막', '섀도우아레나', '검은사막모바일', 'CrimsonDesert'],
-    textArrayUrl : ['https://www.kr.playblackdesert.com', 'https://shadowarena.pearlabyss.com', 'https://www.blackdesertm.com', 'https://crimsondesert.pearlabyss.com'],
-    textOffset : 900,
-    textColor : 0xffffff,
-    textSize: 100,
-    cameraMaxDistance : 2500,
-} || {};
+const OPTIONS =
+    {
+        cameraPosition: 2000,
+        cameraRotateSpeed: 1100,
+        cameraMaxDistance: 2500,
+        cameraWatchAllSection: true,
+        cubeImage: ['./img/image_1.jpg', './img/image_2.jpg', './img/image_3.jpg', './img/image_4.jpg', './img/image_5.jpg', './img/image_6.jpg'],
+        textArray: ['검은사막', '섀도우아레나', '검은사막모바일', 'CrimsonDesert'],
+        textArrayUrl: [
+            'https://www.kr.playblackdesert.com',
+            'https://shadowarena.pearlabyss.com',
+            'https://www.blackdesertm.com',
+            'https://crimsondesert.pearlabyss.com',
+        ],
+        textOffset: 900,
+        textColor: 0xffffff,
+        textSize: 100,
+        textHeight: 100,
+        textAnimationSpeed: 400,
+        fontUrl: './nanum.json',
+    } || {};
 
 // Scene 설정
 const setupScene = () => {
@@ -38,7 +50,7 @@ const setupScene = () => {
     renderer.setPixelRatio(devicePixelRatio);
     // WebGL 호출!
     document.body.appendChild(renderer.domElement);
-}
+};
 
 // feet 계산하는 함수 실제로 쓰이지 않음
 // const fti = (feet) => feet * 12;
@@ -50,7 +62,7 @@ const setupCubeBox = () => {
     let loader = new THREE.CubeTextureLoader();
     // scene의 background 설정
     scene.background = loader.load(urls);
-}
+};
 
 // 빛을 추가한다. (실제로 사용되지 않음)
 /* const addLight = () => {
@@ -63,7 +75,6 @@ const setupCubeBox = () => {
 
 // OrbitControl 사용
 const setupControls = () => {
-
     // 기존에 orbitControls에 선언되어있는 controls에 할당
     controls = new THREE.OrbitControls(camera, renderer.domElement);
 
@@ -76,16 +87,16 @@ const setupControls = () => {
     controls.minDistance = 0;
     controls.maxDistance = OPTIONS.cameraMaxDistance; // max distance 결정
     controls.enablePan = false;
-    controls.autoRotateSpeed = .5; // 자동으로 카메라가 도는 스피드 결정
+    controls.autoRotateSpeed = OPTIONS.cameraRotateSpeed / 1000; // 자동으로 카메라가 도는 스피드 결정
 
-    controls.maxPolarAngle = Math.PI / 2; // 육면체를 어느정도각도까지 보여줄지 결정
+    controls.maxPolarAngle = OPTIONS.cameraWatchAllSection ? Math.PI : Math.PI / 2; // 육면체를 어느정도각도까지 보여줄지 결정
     // Math.PI / 2로 설정하면 상단을 볼 수 없다.
 
     // 리사이즈시에 리사이즈 이벤트 발동, mousedown, mousemove 이벤트도 추가
     window.addEventListener('resize', onWindowResize, false);
     document.addEventListener('mousedown', onMouseDown, false);
     document.addEventListener('mousemove', onMouseMove, false);
-}
+};
 
 // 리사이즈 이벤트
 const onWindowResize = () => {
@@ -94,11 +105,11 @@ const onWindowResize = () => {
     camera.updateProjectionMatrix();
     // 렌더러에 사이즈 설정
     renderer.setSize(window.innerWidth, window.innerHeight);
-}
+};
 
 // 마우스 이벤트에 할당
-const onMouseDown = (event) => mouseEvent(event, "click");
-const onMouseMove = (event) => mouseEvent(event, "move");
+const onMouseDown = (event) => mouseEvent(event, 'click');
+const onMouseMove = (event) => mouseEvent(event, 'move');
 // 마우스 이벤트
 const mouseEvent = (event, action) => {
     event.preventDefault(); // 기본 기능 방지
@@ -116,13 +127,13 @@ const mouseEvent = (event, action) => {
         let children = parentContainer.children[i].children;
         pick(children, action);
     }
-}
+};
 
 // 화면 전환 pick 호출
 const pick = (arr, action) => {
     let intersects = raycaster.intersectObjects(arr);
     // 각 텍스트를 클릭하면
-    if (action == "click") {
+    if (action == 'click') {
         if (intersects.length > 0) {
             for (let i = 0; i < intersects.length; i++) {
                 let intersectText = intersects[i].object.geometry.parameters.text;
@@ -141,31 +152,30 @@ const pick = (arr, action) => {
                 }
             }
         }
-    } else if (action == "move") {
+    } else if (action == 'move') {
         return;
-       /*  if (intersects.length > 0) {
+        /*  if (intersects.length > 0) {
             console.log(intersects)
         } else {
             return;
         } */
     }
-}
+};
 
 // 대망의 Text
 const add3DText = () => {
-
     // 메쉬 형태로 container를 짜는 것을 선언
     parentContainer = new THREE.Mesh();
     scene.add(parentContainer);
 
     // 지오메트리 공간을 만든다.
     setupTextGeometry()
-        .then(data => {
+        .then((data) => {
             textObjsContainer = data;
             animate();
         })
-        .catch(error => console.log(error));
-}
+        .catch((error) => console.log(error));
+};
 
 // text를 지오메트리로
 const setupTextGeometry = () => {
@@ -174,9 +184,9 @@ const setupTextGeometry = () => {
         let fontLoader = new THREE.FontLoader();
         // notosans kr 폰트 로드 // facetypee에서 변환
         // https://gero3.github.io/facetype.js/
-        fontLoader.load('./nanum.json', function (font) {
+        fontLoader.load(OPTIONS.fontUrl, function (font) {
             // textOptions
-            let textOptions = { size: OPTIONS.textSize, height: 135, curveSegments: 1, font: font };
+            let textOptions = { size: OPTIONS.textSize, height: OPTIONS.textHeight, curveSegments: 1, font: font };
             let textobjs = [
                 createText(OPTIONS.textArray[0], textOptions),
                 createText(OPTIONS.textArray[1], textOptions),
@@ -188,15 +198,10 @@ const setupTextGeometry = () => {
             let offsetDistance = OPTIONS.textOffset;
 
             // east, north, west, souths
-            var offsetVectors = [
-                new THREE.Vector3(1, 0, 0),
-                new THREE.Vector3(0, 0, -1),
-                new THREE.Vector3(-1, 0, 0),
-                new THREE.Vector3(0, 0, 1)
-            ];
+            var offsetVectors = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 0, -1), new THREE.Vector3(-1, 0, 0), new THREE.Vector3(0, 0, 1)];
 
             // apply the offset distance to each offsetVector
-            offsetVectors.forEach(offsetVector => {
+            offsetVectors.forEach((offsetVector) => {
                 offsetVector.setLength(offsetDistance);
             });
 
@@ -205,7 +210,7 @@ const setupTextGeometry = () => {
                 textobjs[i].position.add(offsetVectors[i]);
             }
 
-            textobjs.forEach(t => {
+            textobjs.forEach((t) => {
                 parentContainer.add(t);
             });
 
@@ -216,7 +221,7 @@ const setupTextGeometry = () => {
             }
         });
     });
-}
+};
 
 // text 만들기
 const createText = (t, o) => {
@@ -225,36 +230,35 @@ const createText = (t, o) => {
     var textmaterial = new THREE.MeshBasicMaterial({ color: OPTIONS.testColor, overdraw: true });
     textMesh = new THREE.Mesh(geo, textmaterial);
 
-    group = new THREE.Object3D();
+    let group = new THREE.Object3D();
     group.add(textMesh);
 
     scene.add(group);
 
     return group;
-}
+};
 
 const animate = () => {
     requestAnimationFrame(animate);
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
     render();
-}
+};
 
 // 그리기!
 const render = () => {
-
     if (parentContainer) {
-        parentContainer.rotateY(.001);
+        parentContainer.rotateY(OPTIONS.textAnimationSpeed / 100000);
     }
 
     for (let i = 0; i < textObjsContainer.length; i++) {
         var mat = textObjsContainer[i];
-        mat.children[0].material.opacity = .5;
+        mat.children[0].material.opacity = 0.5;
         mat.children[0].material.wireframe = true;
         mat.children[0].lookAt(camera.position);
     }
 
     renderer.render(scene, camera);
-}
+};
 
 setupScene();
 setupCubeBox();
