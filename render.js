@@ -28,11 +28,11 @@ const OPTIONS =
             'https://crimsondesert.pearlabyss.com',
             'https://crimsondesert.pearlabyss.com',
         ],
-        textOffset: 1900,
+        textOffset: 1200,
         textColor: 0xffffff,
         textSize: 100,
         textHeight: 100,
-        textAnimationSpeed: 400,
+        textAnimationSpeed: 800,
         fontUrl: './nanum.json',
     } || {};
 
