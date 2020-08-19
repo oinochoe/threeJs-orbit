@@ -19,14 +19,16 @@ const OPTIONS =
         cameraMaxDistance: 2500,
         cameraWatchAllSection: true,
         cubeImage: ['./img/image_1.jpg', './img/image_2.jpg', './img/image_3.jpg', './img/image_4.jpg', './img/image_5.jpg', './img/image_6.jpg'],
-        textArray: ['검은사막', '섀도우아레나', '검은사막모바일', 'CrimsonDesert'],
+        textArray: ['검은사막', '섀도우아레나', '검은사막모바일', 'CrimsonDesert', 'Dokev'],
+        // TODO : 하나의 오브젝트를 가진 객체로 변경 필요.... 추가할 때마다 세군대 추가해야함.. TODO 참조.
         textArrayUrl: [
             'https://www.kr.playblackdesert.com',
             'https://shadowarena.pearlabyss.com',
             'https://www.blackdesertm.com',
             'https://crimsondesert.pearlabyss.com',
+            'https://crimsondesert.pearlabyss.com',
         ],
-        textOffset: 900,
+        textOffset: 1900,
         textColor: 0xffffff,
         textSize: 100,
         textHeight: 100,
@@ -187,18 +189,27 @@ const setupTextGeometry = () => {
         fontLoader.load(OPTIONS.fontUrl, function (font) {
             // textOptions
             let textOptions = { size: OPTIONS.textSize, height: OPTIONS.textHeight, curveSegments: 1, font: font };
+            // TODO : 객체 해시맵으로 표현
             let textobjs = [
                 createText(OPTIONS.textArray[0], textOptions),
                 createText(OPTIONS.textArray[1], textOptions),
                 createText(OPTIONS.textArray[2], textOptions),
                 createText(OPTIONS.textArray[3], textOptions),
+                createText(OPTIONS.textArray[4], textOptions),
             ];
 
             // 텍스트들끼리의 거리
             let offsetDistance = OPTIONS.textOffset;
 
             // east, north, west, souths
-            var offsetVectors = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 0, -1), new THREE.Vector3(-1, 0, 0), new THREE.Vector3(0, 0, 1)];
+            // TODO : 객체 해시맵으로 표현
+            var offsetVectors = [
+                new THREE.Vector3(1, 0, 0),
+                new THREE.Vector3(0, 0, -1),
+                new THREE.Vector3(-1, 0, 0),
+                new THREE.Vector3(0, 0, 1),
+                new THREE.Vector3(-1, -1, -1),
+            ];
 
             // apply the offset distance to each offsetVector
             offsetVectors.forEach((offsetVector) => {
@@ -227,7 +238,7 @@ const setupTextGeometry = () => {
 const createText = (t, o) => {
     var geo = new THREE.TextGeometry(t, o);
     geo.center();
-    var textmaterial = new THREE.MeshBasicMaterial({ color: OPTIONS.testColor, overdraw: true });
+    var textmaterial = new THREE.MeshBasicMaterial({ color: OPTIONS.textColor, overdraw: true });
     textMesh = new THREE.Mesh(geo, textmaterial);
 
     let group = new THREE.Object3D();
