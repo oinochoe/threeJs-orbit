@@ -12,15 +12,18 @@ let raycaster = new THREE.Raycaster();
 let mousepoint = new THREE.Vector2(),
     INTERSECTED;
 
-const OPTIONS =
+let OPTIONS =
     {
-        cameraPosition: 2000,
-        cameraRotateSpeed: 1100,
-        cameraMaxDistance: 2500,
-        cameraWatchAllSection: true,
+        camera: {
+            cameraPosition: 2000, // TODO: localstorage
+            cameraRotateSpeed: 1100,
+            cameraMaxDistance: 2500,
+            cameraWatchAllSection: true,
+        },
+        // TODO: localstorage
         cubeImage: ['./img/image_1.jpg', './img/image_2.jpg', './img/image_3.jpg', './img/image_4.jpg', './img/image_5.jpg', './img/image_6.jpg'],
         textArray: ['검은사막', '섀도우아레나', '검은사막모바일', 'CrimsonDesert', 'Dokev'],
-        // TODO : 하나의 오브젝트를 가진 객체로 변경 필요.... 추가할 때마다 세군대 추가해야함.. TODO 참조.
+        // TODO: localstorage
         textArrayUrl: [
             'https://www.kr.playblackdesert.com',
             'https://shadowarena.pearlabyss.com',
@@ -28,12 +31,12 @@ const OPTIONS =
             'https://crimsondesert.pearlabyss.com',
             'https://crimsondesert.pearlabyss.com',
         ],
-        textOffset: 1200,
-        textColor: 0xffffff,
-        textSize: 100,
-        textHeight: 100,
-        textAnimationSpeed: 800,
-        fontUrl: './nanum.json',
+        textOffset: 1200, // TODO: localstorage
+        textColor: 0xffffff, // TODO: localstorage
+        textSize: 100, // TODO: localstorage
+        textHeight: 100, // TODO: localstorage
+        textAnimationSpeed: 800, // TODO: localstorage
+        fontUrl: './nanum.json', // TODO: localstorage
     } || {};
 
 // Scene 설정
@@ -42,10 +45,10 @@ const setupScene = () => {
     scene = new THREE.Scene();
     // 기본 camera 설정 (PerspectiveCamera를 통해서 원근감 표현) , 1, 카메라 중심점 수치 *README참고*
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 5000);
-    // 카메라 포지션 설정
-    camera.position.set(0, 0, OPTIONS.cameraPosition);
     // 안티앨리어싱 설정으로 WebGL rendering
     renderer = new THREE.WebGLRenderer({ antialias: true });
+    // 카메라 포지션 설정
+    camera.position.set(0, 0, OPTIONS.camera.cameraPosition);
     // WebGL size 설정
     renderer.setSize(window.innerWidth, window.innerHeight);
     // 디바이스에 따라 반응하도록 설정
@@ -87,11 +90,7 @@ const setupControls = () => {
     controls.screenSpacePanning = false; // 패닝시에 카메라가 어떻게 보일지 결정
 
     controls.minDistance = 0;
-    controls.maxDistance = OPTIONS.cameraMaxDistance; // max distance 결정
     controls.enablePan = false;
-    controls.autoRotateSpeed = OPTIONS.cameraRotateSpeed / 1000; // 자동으로 카메라가 도는 스피드 결정
-
-    controls.maxPolarAngle = OPTIONS.cameraWatchAllSection ? Math.PI : Math.PI / 2; // 육면체를 어느정도각도까지 보여줄지 결정
     // Math.PI / 2로 설정하면 상단을 볼 수 없다.
 
     // 리사이즈시에 리사이즈 이벤트 발동, mousedown, mousemove 이벤트도 추가
@@ -203,7 +202,7 @@ const setupTextGeometry = () => {
 
             // east, north, west, souths
             // TODO : 객체 해시맵으로 표현
-            var offsetVectors = [
+            let offsetVectors = [
                 new THREE.Vector3(1, 0, 0),
                 new THREE.Vector3(0, 0, -1),
                 new THREE.Vector3(-1, 0, 0),
@@ -217,7 +216,7 @@ const setupTextGeometry = () => {
             });
 
             // add the offset vectors to each circle to give them their offset starting position
-            for (var i = 0; i < textobjs.length; i++) {
+            for (let i = 0; i < textobjs.length; i++) {
                 textobjs[i].position.add(offsetVectors[i]);
             }
 
@@ -236,9 +235,9 @@ const setupTextGeometry = () => {
 
 // text 만들기
 const createText = (t, o) => {
-    var geo = new THREE.TextGeometry(t, o);
+    let geo = new THREE.TextGeometry(t, o);
     geo.center();
-    var textmaterial = new THREE.MeshBasicMaterial({ color: OPTIONS.textColor, overdraw: true });
+    let textmaterial = new THREE.MeshBasicMaterial({ color: OPTIONS.textColor, overdraw: true });
     textMesh = new THREE.Mesh(geo, textmaterial);
 
     let group = new THREE.Object3D();
@@ -262,14 +261,26 @@ const render = () => {
     }
 
     for (let i = 0; i < textObjsContainer.length; i++) {
-        var mat = textObjsContainer[i];
+        let mat = textObjsContainer[i];
         mat.children[0].material.opacity = 0.5;
         mat.children[0].material.wireframe = true;
         mat.children[0].lookAt(camera.position); // 카메라 방향으로 보게 함.
     }
 
+    controls.maxDistance = OPTIONS.camera.cameraMaxDistance; // max distance 결정
+    controls.autoRotateSpeed = OPTIONS.camera.cameraRotateSpeed / 1000; // 자동으로 카메라가 도는 스피드 결정
+    controls.maxPolarAngle = OPTIONS.camera.cameraWatchAllSection ? Math.PI : Math.PI / 2; // 육면체를 어느정도각도까지 보여줄지 결정
     renderer.render(scene, camera);
 };
+
+// option add
+let gui = new dat.GUI({ autoPlace: true });
+let cam = gui.addFolder('Camera');
+gui.add(OPTIONS, 'textAnimationSpeed', 0, 5000).listen();
+cam.add(OPTIONS.camera, 'cameraMaxDistance', 2000, 5000).listen();
+cam.add(OPTIONS.camera, 'cameraRotateSpeed', 0, 5000).listen();
+cam.add(OPTIONS.camera, 'cameraWatchAllSection', true).listen();
+cam.open();
 
 setupScene();
 setupCubeBox();
