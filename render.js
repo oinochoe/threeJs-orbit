@@ -276,11 +276,14 @@ const render = () => {
 // option add
 let gui = new dat.GUI({ autoPlace: true });
 let cam = gui.addFolder('Camera');
-gui.add(OPTIONS, 'textAnimationSpeed', 0, 5000).listen();
+let text = gui.addFolder('text');
 cam.add(OPTIONS.camera, 'cameraMaxDistance', 2000, 5000).listen();
 cam.add(OPTIONS.camera, 'cameraRotateSpeed', 0, 5000).listen();
 cam.add(OPTIONS.camera, 'cameraWatchAllSection', true).listen();
 cam.open();
+
+text.add(OPTIONS, 'textAnimationSpeed', 0, 5000).listen();
+text.open();
 
 setupScene();
 setupCubeBox();

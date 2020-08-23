@@ -276,11 +276,13 @@ var gui = new dat.GUI({
   autoPlace: true
 });
 var cam = gui.addFolder('Camera');
-gui.add(OPTIONS, 'textAnimationSpeed', 0, 5000).listen();
+var text = gui.addFolder('text');
 cam.add(OPTIONS.camera, 'cameraMaxDistance', 2000, 5000).listen();
 cam.add(OPTIONS.camera, 'cameraRotateSpeed', 0, 5000).listen();
 cam.add(OPTIONS.camera, 'cameraWatchAllSection', true).listen();
 cam.open();
+text.add(OPTIONS, 'textAnimationSpeed', 0, 5000).listen();
+text.open();
 setupScene();
 setupCubeBox();
 setupControls();
